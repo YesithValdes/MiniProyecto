@@ -1,18 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-crud',
+  selector: 'app-login',
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule],
-  templateUrl: './crud.component.html',
-  styleUrl: './crud.component.css'
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css'
 })
-export class CrudComponent {
+
+export class LoginComponent {
 
   resultado!: string;
+  username: string = '';
+  password: string = '';
+
   constructor(){
 
   }
@@ -30,3 +33,4 @@ export class CrudComponent {
   }
 
 }   
+
