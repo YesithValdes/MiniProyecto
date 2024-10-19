@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
       <div class="login-container col-md-4 col-sm-6">
         <!-- Formulario de Login -->
-        <form [formGroup]="formularioLogin" (ngSubmit)="submit()" class="mt-2">
+        <form [formGroup]="formularioLogin" (ngSubmit)="login()" class="mt-2">
           <div class="form-floating mb-3">
             <input 
               type="text" 
@@ -36,7 +36,7 @@
             </div>
           </div>
           <!-- Botón de Login -->
-          <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+          <button type="submit" class="btn btn-primary w-100" (click)="login()">Iniciar Sesión</button>
         </form>
   
         <!-- Espaciado entre el formulario y el enlace -->
