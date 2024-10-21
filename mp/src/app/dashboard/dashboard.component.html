@@ -1,2 +1,98 @@
-
+<div class="container">
+    <h2>Lista de Productos</h2>
+  
+    <div *ngIf="ultimaLista">
+      <h3>ID de la lista: {{ ultimaLista.id }}</h3>
+      <p>Fecha de creación: {{ ultimaLista.fecha | date:'short' }}</p>
+  
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Lugar de Compra</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let producto of ultimaLista.productos">
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.lugar }}</td>
+            <td>
+              <button (click)="abrirModalEdicion(producto)">Editar</button>
+              <button (click)="eliminarProducto(producto)" class="btn btn-danger">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <button (click)="abrirModal()" class="btn btn-primary">Agregar Producto</button>
+    <button (click)="abrirModalVerListas()" class="btn btn-secondary">Ver Todas las Listas</button>
+  
+    <!-- Modal para agregar producto -->
+    <div *ngIf="mostrarModal" class="modal">
+      <div class="modal-content">
+        <h3>Agregar Producto</h3>
+        <label for="nombre">Nombre del Producto:</label>
+        <input id="nombre" type="text" [(ngModel)]="nuevoProducto.nombre">
+  
+        <label for="lugar">Lugar de Compra:</label>
+        <select id="lugar" [(ngModel)]="nuevoProducto.lugar">
+          <option *ngFor="let lugar of lugaresDisponibles" [value]="lugar">{{ lugar }}</option>
+        </select>
+  
+        <div class="modal-buttons">
+          <button (click)="guardarProducto()" class="btn btn-success">Guardar</button>
+          <button (click)="cerrarModal()" class="btn btn-danger">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal para editar producto -->
+    <div *ngIf="mostrarModalEditar" class="modal">
+      <div class="modal-content">
+        <h3>Editar Producto</h3>
+        <label for="edit-nombre">Nombre del Producto:</label>
+        <input id="edit-nombre" type="text" [(ngModel)]="productoAEditar.nombre">
+  
+        <label for="edit-lugar">Lugar de Compra:</label>
+        <select id="edit-lugar" [(ngModel)]="productoAEditar.lugar">
+          <option *ngFor="let lugar of lugaresDisponibles" [value]="lugar">{{ lugar }}</option>
+        </select>
+  
+        <div class="modal-buttons">
+          <button (click)="guardarEdicionProducto()" class="btn btn-success">Guardar</button>
+          <button (click)="cerrarModalEditar()" class="btn btn-danger">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal para ver todas las listas -->
+    <div *ngIf="mostrarModalVerListas" class="modal">
+      <div class="modal-content">
+        <h3>Listas de Productos</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha de Creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let lista of listas">
+              <td>{{ lista.id }}</td>
+              <td>{{ lista.fecha | date:'short' }}</td>
+              <td>
+                <button (click)="eliminarLista(lista)" class="btn btn-danger">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button (click)="crearNuevaLista()" class="btn btn-primary">Agregar Nueva Lista</button>
+        <button (click)="cerrarModalVerListas()" class="btn btn-secondary">Cerrar</button>
+      </div>
+    </div>
+  </div>
+  
   
