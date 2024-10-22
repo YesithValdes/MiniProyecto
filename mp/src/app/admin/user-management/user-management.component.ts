@@ -1,71 +1,61 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { UserService } from '../../services/user.services';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { switchMap, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-user-management',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './user-management.component.html',
-  styleUrl: './user-management.component.css'
+  styleUrls: ['./user-management.component.css'],
+  imports: [CommonModule,FormsModule],
+  standalone: true
 })
-export class UserManagementComponent {
-  users$: Observable<any[]> | undefined;
-  isAdmin$: Observable<boolean> | undefined;
-  editingUser: any | null = null;
+export class UserManagementComponent implements OnInit {
+  isAdmin$: Observable<boolean>;
+  users$: Observable<any[]>;
+  editingUser: any = null;
   editForm: FormGroup;
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
+    private userService: UserService,
     private fb: FormBuilder
   ) {
+    this.isAdmin$ = this.userService.isAdmin(); // Assuming you have a method to check admin role
+    this.users$ = this.userService.getUsers(); // Assuming you have a method to get all users
     this.editForm = this.fb.group({
-      nombre: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      rol: ['', Validators.required]
+      nombre: [''],
+      email: [''],
+      rol: [''],
+      fechanacimiento: [''],
+      genero: [''],
+      tipodocumento: [''],
+      numerodocumento: [''],
+      telefono: ['']
     });
+  }
 
-    this.isAdmin$ = this.afAuth.authState.pipe(
-      switchMap(user => {
-        if (user) {
-          return this.afs.doc(`usuarios/${user.uid}`).valueChanges().pipe(
-            map((userData: any) => userData.rol === 'admin') // Check if user is admin
-          );
-        } else {
-          return of(false); // Not logged in, so not admin
-        }
-      })
-    );
-
-    this.users$ = this.isAdmin$.pipe(
-      switchMap(isAdmin => {
-        if (isAdmin) {
-          return this.afs.collection('usuarios').valueChanges();
-        } else {
-          return of([]); // Return empty array if not admin
-        }
-      })
-    );
+  ngOnInit(): void {
+    // Any additional initialization logic
   }
 
   editUser(user: any) {
     this.editingUser = user;
-    this.editForm.patchValue(user); // Pre-fill the form with user data
+    this.editForm.patchValue(user);
   }
 
-  async updateUser() {
+  updateUser() {
     if (this.editForm.valid && this.editingUser) {
-      try {
-        await this.afs.doc(`usuarios/${this.editingUser.usuariosRef}`).update(this.editForm.value);
-        this.cancelEdit(); // Clear the form and close editing mode
-      } catch (error) {
-        console.error("Error updating user:", error);
-        // Handle the error appropriately (e.g., display an error message)
-      }
+      const updatedUser = { ...this.editingUser, ...this.editForm.value };
+      this.userService.updateUser(this.editingUser.id, updatedUser) // Assuming you have an update method
+        .then(() => {
+          this.cancelEdit(); // Close the modal and reset
+          // You might want to refresh the users$ observable here
+        })
+        .catch(error => {
+          console.error('Error updating user:', error);
+          // Handle the error appropriately, e.g., show an error message
+        });
     }
   }
 

@@ -1,40 +1,110 @@
 <div *ngIf="isAdmin$ | async">
-    <h2>User Management</h2>
-  
-    <div *ngIf="users$ | async as users">
-      <ul>
-        <li *ngFor="let user of users">
-          {{ user.nombre }} ({{ user.email }}) - 
-          <button (click)="editUser(user)">Edit</button>
-        </li>
-      </ul>
-    </div>
-  
-    <div *ngIf="editingUser">
-      <h3>Edit User: {{ editingUser.nombre }}</h3>
-      <form [formGroup]="editForm" (ngSubmit)="updateUser()">
-        <div>
-          <label for="nombre">Nombre:</label>
-          <input type="text" id="nombre" formControlName="nombre" required>
+  <h2>User Management</h2>
+
+  <div class="table-responsive">
+    <table class="table table-striped" *ngIf="users$ | async as users">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Foto</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Email</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Fecha de Nacimiento</th>
+          <th scope="col">Género</th>
+          <th scope="col">Tipo Documento</th>
+          <th scope="col">Número Documento</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td><img [src]="user.foto" alt="Foto de perfil" height="50"></td> 
+          <td>{{ user.nombre }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.rol }}</td>
+          <td>{{ user.fechanacimiento }}</td> 
+          <td>{{ user.genero }}</td>
+          <td>{{ user.tipodocumento }}</td>
+          <td>{{ user.numerodocumento }}</td>
+          <td>{{ user.telefono }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm me-2" (click)="editUser(user)" data-bs-toggle="modal" data-bs-target="#editUserModal">
+              <i class="bi bi-pencil-square"></i> Editar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true" *ngIf="editingUser">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUserModalLabel">Editar Usuario: {{ editingUser.nombre }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancelEdit()"></button>
         </div>
-        <div>
-          <label for="email">Email:</label>
-          <input type="email" id="email" formControlName="email" required readonly>
+        <div class="modal-body">
+          <form [formGroup]="editForm" (ngSubmit)="updateUser()">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre:</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email:</label>
+              <input type="email" class="form-control" id="email" formControlName="email" required readonly>
+            </div>
+            <div class="mb-3">
+              <label for="rol" class="form-label">Rol:</label>
+              <select class="form-select" id="rol" formControlName="rol" required>
+                <option value="admin">Administrador</option>
+                <option value="user">Usuario</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="fechanacimiento" class="form-label">Fecha de Nacimiento:</label>
+              <input type="date" class="form-control" id="fechanacimiento" formControlName="fechanacimiento" required>
+            </div>
+            <div class="mb-3">
+              <label for="genero" class="form-label">Género:</label>
+              <select class="form-select" id="genero" formControlName="genero" required>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="tipodocumento" class="form-label">Tipo de Documento:</label>
+              <select class="form-select" id="tipodocumento" formControlName="tipodocumento" required>
+                <option value="CC">Cédula de Ciudadanía</option>
+                <option value="TI">Tarjeta de Identidad</option>
+                <option value="CE">Cédula de Extranjería</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="numerodocumento" class="form-label">Número de Documento:</label>
+              <input type="text" class="form-control" id="numerodocumento" formControlName="numerodocumento" required>
+            </div>
+            <div class="mb-3">
+              <label for="telefono" class="form-label">Teléfono:</label>
+              <input type="tel" class="form-control" id="telefono" formControlName="telefono" required>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">Guardar Cambios</button>
+          </form>
         </div>
-        <div>
-          <label for="rol">Rol:</label>
-          <select id="rol" formControlName="rol" required>
-            <option value="admin">Administrador</option>
-            <option value="user">Usuario</option>
-          </select>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelEdit()">Cancelar</button>
         </div>
-        <button type="submit" [disabled]="!editForm.valid">Update</button>
-        <button type="button" (click)="cancelEdit()">Cancel</button>
-      </form>
+      </div>
     </div>
   </div>
-  
-  <div *ngIf="!(isAdmin$ | async)">
-    You do not have permission to access this page.
-  </div>
+</div>
+
+<div *ngIf="!(isAdmin$ | async)">
+  You do not have permission to access this page.
+</div>
+
   
