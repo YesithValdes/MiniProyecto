@@ -31,8 +31,8 @@
           <td>{{ user.numerodocumento }}</td>
           <td>{{ user.telefono }}</td>
           <td>
-            <button class="btn btn-primary btn-sm me-2" (click)="editUser(user)" data-bs-toggle="modal" data-bs-target="#editUserModal">
-              <i class="bi bi-pencil-square"></i> Editar
+            <button class="btn btn-primary btn-sm me-2" (click)="editUser(user)">
+              Editar
             </button>
           </td>
         </tr>
@@ -40,65 +40,61 @@
     </table>
   </div>
 
-  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true" *ngIf="editingUser">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editUserModalLabel">Editar Usuario: {{ editingUser.nombre }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancelEdit()"></button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="editForm" (ngSubmit)="updateUser()">
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre:</label>
-              <input type="text" class="form-control" id="nombre" formControlName="nombre" required>
-            </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email:</label>
-              <input type="email" class="form-control" id="email" formControlName="email" required readonly>
-            </div>
-            <div class="mb-3">
-              <label for="rol" class="form-label">Rol:</label>
-              <select class="form-select" id="rol" formControlName="rol" required>
-                <option value="admin">Administrador</option>
-                <option value="user">Usuario</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="fechanacimiento" class="form-label">Fecha de Nacimiento:</label>
-              <input type="date" class="form-control" id="fechanacimiento" formControlName="fechanacimiento" required>
-            </div>
-            <div class="mb-3">
-              <label for="genero" class="form-label">Género:</label>
-              <select class="form-select" id="genero" formControlName="genero" required>
-                <option value="Masculino">Masculino</option>
-                <option value="Femenino">Femenino</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="tipodocumento" class="form-label">Tipo de Documento:</label>
-              <select class="form-select" id="tipodocumento" formControlName="tipodocumento" required>
-                <option value="CC">Cédula de Ciudadanía</option>
-                <option value="TI">Tarjeta de Identidad</option>
-                <option value="CE">Cédula de Extranjería</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="numerodocumento" class="form-label">Número de Documento:</label>
-              <input type="text" class="form-control" id="numerodocumento" formControlName="numerodocumento" required>
-            </div>
-            <div class="mb-3">
-              <label for="telefono" class="form-label">Teléfono:</label>
-              <input type="tel" class="form-control" id="telefono" formControlName="telefono" required>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">Guardar Cambios</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelEdit()">Cancelar</button>
-        </div>
+  <!-- Modal para editar usuario sin Bootstrap -->
+  <div class="modal" [ngClass]="{'visible': editingUser}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Editar Usuario: {{ editingUser?.nombre }}</h5>
+        <button class="close-button" (click)="cancelEdit()">X</button>
       </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm" (ngSubmit)="updateUser()">
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" formControlName="nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" formControlName="email" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="rol">Rol:</label>
+            <select id="rol" formControlName="rol" required>
+              <option value="admin">Administrador</option>
+              <option value="user">Usuario</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fechanacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fechanacimiento" formControlName="fechanacimiento" required>
+          </div>
+          <div class="form-group">
+            <label for="genero">Género:</label>
+            <select id="genero" formControlName="genero" required>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tipodocumento">Tipo de Documento:</label>
+            <select id="tipodocumento" formControlName="tipodocumento" required>
+              <option value="CC">Cédula de Ciudadanía</option>
+              <option value="TI">Tarjeta de Identidad</option>
+              <option value="CE">Cédula de Extranjería</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="numerodocumento">Número de Documento:</label>
+            <input type="text" id="numerodocumento" formControlName="numerodocumento" required>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" formControlName="telefono" required>
+          </div>
+          <button type="submit" [disabled]="!editForm.valid">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+        </form>
     </div>
   </div>
 </div>

@@ -54,6 +54,8 @@ export class RegisterComponent {
   async register() {
     if (this.registerForm.valid && this.selectedFile) {
       const { correo, password, nombre, tipoDocumento, numeroDocumento, genero, telefono, rol, fechaNacimiento } = this.registerForm.value;
+
+      const passwordcod = await this.hashPassword(password); 
   
       try {
         // 1. Create user with Firebase Authentication
@@ -96,7 +98,7 @@ export class RegisterComponent {
                   rol,
                   fechanacimiento: fechaNacimiento,
                   foto: fotoURL,
-                  password
+                  passwordcod
                 };
 
                 console.log("Firestore Data:", userData);
@@ -120,6 +122,14 @@ export class RegisterComponent {
       console.warn("Form is invalid:", this.registerForm.errors); // Log form validation errors
       this.errorMessage = "Por favor, complete todos los campos del formulario.";
     }
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
   
 }
