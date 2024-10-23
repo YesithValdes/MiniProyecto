@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,8 @@ export class DashboardComponent {
 
   listaIdCounter: number = 1;
   productoIdCounter: number = 1; // Nuevo contador para ID de productos
+
+  constructor(private router: Router){}
 
   abrirModal() {
     this.mostrarModal = true;
@@ -103,5 +106,9 @@ export class DashboardComponent {
 
   cerrarModalVerListas() {
     this.mostrarModalVerListas = false;
+  }
+
+  admin(){
+    this.router.navigate(['/user-management']);
   }
 }
