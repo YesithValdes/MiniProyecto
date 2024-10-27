@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { db } from '../firebase-config'; 
-import { collection, setDoc, doc, deleteDoc } from 'firebase/firestore'; 
+import { db } from '../firebase-config';
+import { collection, setDoc, doc, deleteDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,21 +13,21 @@ import { collection, setDoc, doc, deleteDoc } from 'firebase/firestore';
 })
 export class DashboardComponent {
 
-  listas: { id: number, fecha: Date, productos: { id: number, nombre: string, lugar: string }[] }[] = [];
-  ultimaLista: { id: number, fecha: Date, productos: { id: number, nombre: string, lugar: string }[] } | null = null;
+  listas: { id: number, fecha: Date, productos: { id: number, nombre: string, lugar: string, comprado: boolean }[] }[] = [];
+  ultimaLista: { id: number, fecha: Date, productos: { id: number, nombre: string, lugar: string, comprado: boolean }[] } | null = null;
 
-  productos: { id: number, nombre: string, lugar: string }[] = [];
-  
+  productos: { id: number, nombre: string, lugar: string, comprado: boolean }[] = [];
+
   mostrarModal: boolean = false;
   mostrarModalEditar: boolean = false;
   mostrarModalVerListas: boolean = false;
-  mostrarModalInfoLista: boolean = false; // Nuevo: Modal para ver información de la lista 
-  listaSeleccionada: any = null;  
+  mostrarModalInfoLista: boolean = false;
+  listaSeleccionada: any = null;
 
-  nuevoLugar: string = ''; // Nuevo lugar de compra
+  nuevoLugar: string = '';
 
-  nuevoProducto = { id: 0, nombre: '', lugar: '' };
-  productoAEditar = { id: 0, nombre: '', lugar: '' };
+  nuevoProducto = { id: 0, nombre: '', lugar: '', comprado: false };
+  productoAEditar = { id: 0, nombre: '', lugar: '', comprado: false };
 
   lugaresDisponibles = ['Tienda A', 'Tienda B', 'Tienda C', 'Supermercado D'];
 
@@ -40,7 +40,7 @@ export class DashboardComponent {
 
   cerrarModal() {
     this.mostrarModal = false;
-    this.nuevoProducto = { id: 0, nombre: '', lugar: '' };
+    this.nuevoProducto = { id: 0, nombre: '', lugar: '', comprado: false };
   }
 
   guardarProducto() {
@@ -75,13 +75,20 @@ export class DashboardComponent {
 
   cerrarModalEditar() {
     this.mostrarModalEditar = false;
-    this.productoAEditar = { id: 0, nombre: '', lugar: '' };
+    this.productoAEditar = { id: 0, nombre: '', lugar: '', comprado: false };
+  }
+
+  marcarComoComprado(producto: any) {
+    producto.comprado = !producto.comprado;
+    this.enviarDatosAFirestore();
   }
 
   eliminarProducto(producto: any) {
-    if (this.ultimaLista) {
+    if (!producto.comprado && this.ultimaLista) {  // Solo permite eliminar si 'comprado' es falso
       this.ultimaLista.productos = this.ultimaLista.productos.filter(p => p.id !== producto.id);
       this.enviarDatosAFirestore();
+    } else {
+      alert('No puedes eliminar un producto que ya ha sido marcado como comprado.');
     }
   }
 
@@ -121,23 +128,20 @@ export class DashboardComponent {
     this.mostrarModalVerListas = false;
   }
 
-   // Método para abrir el modal de información de una lista
-   abrirModalInfoLista(lista: any): void {
+  abrirModalInfoLista(lista: any): void {
     this.listaSeleccionada = lista;
-    this.mostrarModalInfoLista = true; // Activar el modal
+    this.mostrarModalInfoLista = true;
   }
 
-  // Método para cerrar el modal de información de una lista
   cerrarModalInfoLista(): void {
     this.listaSeleccionada = null;
-    this.mostrarModalInfoLista = false; // Cerrar el modal
-  } 
+    this.mostrarModalInfoLista = false;
+  }
 
-  // Método para agregar un nuevo lugar de compra
   agregarLugar(): void {
     if (this.nuevoLugar.trim()) {
-      this.lugaresDisponibles.push(this.nuevoLugar.trim()); // Agregar el nuevo lugar
-      this.nuevoLugar = ''; // Limpiar el campo
+      this.lugaresDisponibles.push(this.nuevoLugar.trim());
+      this.nuevoLugar = '';
     } else {
       alert('Por favor, ingresa un nombre válido para el lugar.');
     }

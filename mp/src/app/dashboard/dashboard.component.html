@@ -16,10 +16,18 @@
       <tbody>
         <tr *ngFor="let producto of ultimaLista.productos">
           <td>{{ producto.nombre }}</td>
-          <td>{{ producto.lugar }}</td>
+          <td>{{ producto.lugar }}</td> 
+          <td>
+            <input type="checkbox" [(ngModel)]="producto.comprado">
+          </td>
           <td>
             <button (click)="abrirModalEdicion(producto)">Editar</button>
-            <button (click)="eliminarProducto(producto)" class="btn btn-danger">Eliminar</button>
+            <button 
+              (click)="eliminarProducto(producto)" 
+              class="btn btn-danger" 
+              [disabled]="producto.comprado">
+              Eliminar
+            </button>
           </td>
         </tr>
       </tbody>
