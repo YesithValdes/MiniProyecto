@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { db } from '../firebase-config';
 import { collection, setDoc, doc, deleteDoc } from 'firebase/firestore';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,6 +34,8 @@ export class DashboardComponent {
 
   listaIdCounter: number = 1;
   productoIdCounter: number = 1;
+
+  constructor(private router: Router){}
 
   abrirModal() {
     this.mostrarModal = true;
@@ -162,5 +165,9 @@ export class DashboardComponent {
     } catch (error) {
       console.error('Error al actualizar/crear datos en Firestore:', error);
     }
+  }
+
+  admin(){
+    this.router.navigate(['/user-management']);
   }
 }

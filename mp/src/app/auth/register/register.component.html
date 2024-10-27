@@ -1,67 +1,84 @@
-<form (ngSubmit)="register()" [formGroup]="registerForm">
-    <div>
+<form (ngSubmit)="register()" [formGroup]="registerForm" class="container mt-5">
+  <h2 class="mb-4">Registro de Usuario</h2>
+
+  <div class="row">
+    <div class="form-group col-md-6 mb-3">
       <label for="nombre">Nombres:</label>
-      <input type="text" id="nombre" formControlName="nombre" required> 
+      <input type="text" id="nombre" formControlName="nombre" class="form-control" required>
     </div>
-  
-    <div>
+
+    <div class="form-group col-md-6 mb-3">
       <label for="tipoDocumento">Tipo de Documento:</label>
-      <select id="tipoDocumento" formControlName="tipoDocumento" required>
+      <select id="tipoDocumento" formControlName="tipoDocumento" class="form-select" required>
         <option value="CC">Cédula de Ciudadanía</option>
         <option value="TI">Tarjeta de Identidad</option>
         <option value="CE">Cédula de Extranjería</option>
       </select>
     </div>
-  
-    <div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-md-6 mb-3">
       <label for="numeroDocumento">Número de Documento:</label>
-      <input type="text" id="numeroDocumento" formControlName="numeroDocumento" required>
+      <input type="text" id="numeroDocumento" formControlName="numeroDocumento" class="form-control" required>
     </div>
-  
-    <div>
+
+    <div class="form-group col-md-6 mb-3">
       <label>Género:</label>
-      <input type="radio" id="masculino" formControlName="genero" value="Masculino">
-      <label for="masculino">Masculino</label>
-      <input type="radio" id="femenino" formControlName="genero" value="Femenino">
-      <label for="femenino">Femenino</label>
-      <input type="radio" id="otro" formControlName="genero" value="Otro">
-      <label for="otro">Otro</label>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="masculino" formControlName="genero" value="Masculino">
+        <label class="form-check-label" for="masculino">Masculino</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="femenino" formControlName="genero" value="Femenino">
+        <label class="form-check-label" for="femenino">Femenino</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="otro" formControlName="genero" value="Otro">
+        <label class="form-check-label" for="otro">Otro</label>
+      </div>
     </div>
-  
-    <div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-md-6 mb-3">
       <label for="correo">Correo Electrónico:</label>
-      <input type="email" id="correo" formControlName="correo" required>
+      <input type="email" id="correo" formControlName="correo" class="form-control" required>
     </div>
-  
-    <div>
-      <label for="password">Contraseña:</label> <input type="password" id="password" formControlName="password" required>
+
+    <div class="form-group col-md-6 mb-3">
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" formControlName="password" class="form-control" required>
     </div>
-  
-    <div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-md-6 mb-3">
       <label for="telefono">Teléfono Móvil:</label>
-      <input type="tel" id="telefono" formControlName="telefono" required>
+      <input type="tel" id="telefono" formControlName="telefono" class="form-control" required>
     </div>
-  
-    <div>
+
+    <div class="form-group col-md-6 mb-3">
       <label for="rol">Rol:</label>
-      <select id="rol" formControlName="rol" required>
+      <select id="rol" formControlName="rol" class="form-select" required>
         <option value="admin">Administrador</option>
         <option value="user">Usuario</option>
       </select>
     </div>
-  
-    <div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-6 mb-3">
       <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-      <input type="date" id="fechaNacimiento" formControlName="fechaNacimiento" required>
+      <input type="date" id="fechaNacimiento" formControlName="fechaNacimiento" class="form-control" required>
     </div>
-  
-    <div>
+
+    <div class="form-group col-md-6 mb-3">
       <label for="foto">Foto:</label>
-      <input type="file" id="foto" (change)="onFileSelected($event)" accept="image/*">
+      <input type="file" id="foto" (change)="onFileSelected($event)" accept="image/*" class="form-control">
     </div>
-  
-    <button type="submit" [disabled]="!registerForm.valid">Registrarse</button>
-  </form>
-  
-  <div *ngIf="errorMessage">{{ errorMessage }}</div>
-  
+  </div>
+
+  <button type="submit" [disabled]="!registerForm.valid" class="btn btn-primary">Registrarse</button>
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+</form>
+

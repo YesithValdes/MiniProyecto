@@ -1,40 +1,106 @@
 <div *ngIf="isAdmin$ | async">
-    <h2>User Management</h2>
-  
-    <div *ngIf="users$ | async as users">
-      <ul>
-        <li *ngFor="let user of users">
-          {{ user.nombre }} ({{ user.email }}) - 
-          <button (click)="editUser(user)">Edit</button>
-        </li>
-      </ul>
-    </div>
-  
-    <div *ngIf="editingUser">
-      <h3>Edit User: {{ editingUser.nombre }}</h3>
-      <form [formGroup]="editForm" (ngSubmit)="updateUser()">
-        <div>
-          <label for="nombre">Nombre:</label>
-          <input type="text" id="nombre" formControlName="nombre" required>
-        </div>
-        <div>
-          <label for="email">Email:</label>
-          <input type="email" id="email" formControlName="email" required readonly>
-        </div>
-        <div>
-          <label for="rol">Rol:</label>
-          <select id="rol" formControlName="rol" required>
-            <option value="admin">Administrador</option>
-            <option value="user">Usuario</option>
-          </select>
-        </div>
-        <button type="submit" [disabled]="!editForm.valid">Update</button>
-        <button type="button" (click)="cancelEdit()">Cancel</button>
-      </form>
+  <h2>User Management</h2>
+
+  <div class="table-responsive">
+    <table class="table table-striped" *ngIf="users$ | async as users">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Foto</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Email</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Fecha de Nacimiento</th>
+          <th scope="col">Género</th>
+          <th scope="col">Tipo Documento</th>
+          <th scope="col">Número Documento</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td><img [src]="user.foto" alt="Foto de perfil" height="50"></td> 
+          <td>{{ user.nombre }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.rol }}</td>
+          <td>{{ user.fechanacimiento }}</td> 
+          <td>{{ user.genero }}</td>
+          <td>{{ user.tipodocumento }}</td>
+          <td>{{ user.numerodocumento }}</td>
+          <td>{{ user.telefono }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm me-2" (click)="editUser(user)">
+              Editar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal para editar usuario sin Bootstrap -->
+  <div class="modal" [ngClass]="{'visible': editingUser}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Editar Usuario: {{ editingUser?.nombre }}</h5>
+        <button class="close-button" (click)="cancelEdit()">X</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm" (ngSubmit)="updateUser()">
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" formControlName="nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" formControlName="email" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="rol">Rol:</label>
+            <select id="rol" formControlName="rol" required>
+              <option value="admin">Administrador</option>
+              <option value="user">Usuario</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fechanacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fechanacimiento" formControlName="fechanacimiento" required>
+          </div>
+          <div class="form-group">
+            <label for="genero">Género:</label>
+            <select id="genero" formControlName="genero" required>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tipodocumento">Tipo de Documento:</label>
+            <select id="tipodocumento" formControlName="tipodocumento" required>
+              <option value="CC">Cédula de Ciudadanía</option>
+              <option value="TI">Tarjeta de Identidad</option>
+              <option value="CE">Cédula de Extranjería</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="numerodocumento">Número de Documento:</label>
+            <input type="text" id="numerodocumento" formControlName="numerodocumento" required>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" formControlName="telefono" required>
+          </div>
+          <button type="submit" [disabled]="!editForm.valid">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+        </form>
     </div>
   </div>
-  
-  <div *ngIf="!(isAdmin$ | async)">
-    You do not have permission to access this page.
-  </div>
+</div>
+
+<div *ngIf="!(isAdmin$ | async)">
+  You do not have permission to access this page.
+</div>
+
   
